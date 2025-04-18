@@ -29,10 +29,10 @@ plugins {
 }
 
 fun BaseExtension.defaultConfig() {
-    compileSdkVersion(34)
+    compileSdkVersion(36)
     defaultConfig {
         minSdk = 30
-        targetSdk = 34
+        targetSdk = 36
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
         vectorDrawables {

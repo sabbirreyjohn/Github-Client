@@ -34,6 +34,7 @@ dependencies {
 
     implementation(libs.hilt.android)
     implementation(libs.firebase.auth)
+    implementation(libs.androidx.adaptive.navigation.android)
     ksp(libs.hilt.android.ksp)
     implementation(libs.hilt.compose)
     ksp(libs.hilt.compiler.ksp)
@@ -44,8 +45,12 @@ dependencies {
     implementation(libs.ktor.client.logging)
     implementation(libs.ktor.client.content.negotiation)
 
-    implementation(libs.coil)
+    implementation(libs.androidx.adaptive)
+    implementation(libs.androidx.adaptive.layout)
+    implementation(libs.androidx.adaptive.navigation)
 
+    implementation(libs.coil)
+    implementation(libs.androidx.browser)
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)

@@ -8,5 +8,5 @@ sealed class MainScreen {
     data object UserList : MainScreen()
 
     @Serializable
-    data object Repository : MainScreen()
+    data class Repository(val name: String) : MainScreen()
 }

@@ -36,14 +36,14 @@ import xyz.androidrey.githubclient.theme.components.AppBar
 import xyz.androidrey.githubclient.theme.components.ThePreview
 
 @Composable
-fun HomeScreen(viewModel: HomeViewModel, navController: NavController) {
+fun HomeScreen(viewModel: UsersViewModel, navController: NavController) {
 
     val uiState by viewModel.uiState.collectAsState()
     Column(modifier = Modifier.fillMaxSize()) {
         AppBar("Github Client")
         HomeUiStateHandler(uiState, success = {
-            UserList(it) { id ->
-                navController.navigate(MainScreen.Repository)
+            UserList(it) { name ->
+                navController.navigate(MainScreen.Repository(name))
 
             }
         })
@@ -52,7 +52,7 @@ fun HomeScreen(viewModel: HomeViewModel, navController: NavController) {
 }
 
 @Composable
-fun UserList(users: List<User>, onSelect: (User) -> Unit) {
+fun UserList(users: List<User>, onSelect: (String) -> Unit) {
     LazyColumn(
         contentPadding = PaddingValues(horizontal = 8.dp, vertical = 8.dp),
         verticalArrangement = Arrangement.spacedBy(8.dp)
@@ -70,13 +70,13 @@ fun UserList(users: List<User>, onSelect: (User) -> Unit) {
 fun UserCard(
     modifier: Modifier = Modifier,
     user: User,
-    onClick: (User) -> Unit
+    onClick: (String) -> Unit
 ) {
     Card(
         modifier = modifier
             .fillMaxWidth()
             .padding(horizontal = 16.dp, vertical = 8.dp)
-            .clickable(onClick = { onClick(user) }),
+            .clickable(onClick = { onClick(user.login) }),
         elevation = CardDefaults.cardElevation(4.dp),
         shape = RoundedCornerShape(12.dp)
     ) {

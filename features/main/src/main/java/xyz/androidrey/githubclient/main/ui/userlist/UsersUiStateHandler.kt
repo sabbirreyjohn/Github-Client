@@ -7,14 +7,14 @@ import xyz.androidrey.githubclient.theme.components.LoadingScreen
 
 @Composable
 fun  HomeUiStateHandler(
-    state: HomeUiState,
+    state: UsersUiState,
     loading: @Composable () -> Unit = { LoadingScreen() },
     error: @Composable (String) -> Unit = { ErrorScreen(it) },
     success: @Composable (List<User>) -> Unit
 ) {
     when (state) {
-        is HomeUiState.Error -> error(state.message)
-        is HomeUiState.Loading -> loading()
-        is HomeUiState.Success -> success(state.teachers)
+        is UsersUiState.Error -> error(state.message)
+        is UsersUiState.Loading -> loading()
+        is UsersUiState.Success -> success(state.teachers)
     }
 }

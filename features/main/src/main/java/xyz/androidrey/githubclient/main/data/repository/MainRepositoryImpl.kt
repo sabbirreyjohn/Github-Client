@@ -1,6 +1,7 @@
 package xyz.androidrey.githubclient.main.data.repository
 
 import xyz.androidrey.githubclient.common.BuildConfig
+import xyz.androidrey.githubclient.common.data.entity.githubuser.GitHubUser
 import xyz.androidrey.githubclient.common.data.entity.repository.Repository
 import xyz.androidrey.githubclient.common.data.entity.user.User
 import xyz.androidrey.githubclient.main.domain.repository.MainRepository
@@ -18,7 +19,15 @@ class MainRepositoryImpl @Inject constructor(private val requestHandler: Request
         )
     }
 
+    override suspend fun getUserDetails(userName: String): NetworkResult<GitHubUser> {
+        requestHandler.setBearerToken(BuildConfig.access_token)
+        return requestHandler.get<GitHubUser>(
+            urlPathSegments = listOf("users", userName)
+        )
+    }
+
     override suspend fun getRepository(userName: String): NetworkResult<List<Repository>> {
+        requestHandler.setBearerToken(BuildConfig.access_token)
         return requestHandler.get<List<Repository>>(
             urlPathSegments = listOf("users", userName, "repos")
         )
