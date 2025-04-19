@@ -5,7 +5,6 @@ plugins {
 }
 
 dependencies{
-    implementation(projects.storage)
     implementation(libs.ktor.client.core)
     implementation(libs.ktor.client.cio)
     implementation(libs.ktor.client.logging)

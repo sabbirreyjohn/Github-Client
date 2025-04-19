@@ -4,7 +4,7 @@ import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 
 @Serializable
-data class GitHubUser(
+data class GithubUser(
     val login: String,
     val id: Int,
     @SerialName("node_id") val nodeId: String,

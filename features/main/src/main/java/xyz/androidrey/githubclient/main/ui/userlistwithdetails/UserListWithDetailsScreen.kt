@@ -24,8 +24,9 @@ import xyz.androidrey.githubclient.theme.components.AppBar
 @OptIn(ExperimentalMaterial3AdaptiveApi::class)
 @Composable
 fun UserListWithDetailsScreen(viewModel: UsersViewModel) {
-    val usersState by viewModel.uiState.collectAsState()
+    val uiState by viewModel.uiState.collectAsState()
     val searchedUsers by viewModel.searchedUsers.collectAsState()
+    val query by viewModel.searchQuery.collectAsState()
     val scaffoldNavigator = rememberListDetailPaneScaffoldNavigator<String>()
     val scope = rememberCoroutineScope()
     val currentUser = scaffoldNavigator.currentDestination?.contentKey
@@ -35,8 +36,9 @@ fun UserListWithDetailsScreen(viewModel: UsersViewModel) {
             navigator = scaffoldNavigator,
             listPane = {
                 AnimatedPane {
-                    HomeUiStateHandler(usersState) { users ->
-                        UserList(users = searchedUsers, viewModel = viewModel) { login ->
+                    HomeUiStateHandler(uiState) { users ->
+                        val userList = if (query.isBlank()) users else searchedUsers
+                        UserList(users = userList, query = query, viewModel = viewModel) { login ->
                             scope.launch {
                                 scaffoldNavigator.navigateTo(
                                     ListDetailPaneScaffoldRole.Detail,

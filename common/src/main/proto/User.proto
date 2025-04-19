@@ -1,9 +1,0 @@
-syntax = "proto3";
-
-option java_package = "xyz.androidrey.githubclient.storage";
-option java_multiple_files = true;
-
-message User {
-  string email = 1;
-  string accessToken = 2;
-}

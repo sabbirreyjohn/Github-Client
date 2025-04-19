@@ -1,8 +1,13 @@
 plugins {
-    id("java-library")
-    alias(libs.plugins.jetbrains.kotlin.jvm)
+    alias(libs.plugins.android.library)
+    alias(libs.plugins.jetbrainsKotlinAndroid)
+}
+
+android {
+    namespace = "xyz.androidrey.githubclient.common"
 }
 
 dependencies {
     implementation(libs.kotlin.coroutines)
+    implementation(projects.common)
 }

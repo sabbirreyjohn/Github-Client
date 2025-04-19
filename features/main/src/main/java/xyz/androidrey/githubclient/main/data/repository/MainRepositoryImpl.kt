@@ -2,7 +2,7 @@ package xyz.androidrey.githubclient.main.data.repository
 
 import kotlinx.coroutines.flow.Flow
 import xyz.androidrey.githubclient.common.BuildConfig
-import xyz.androidrey.githubclient.common.data.entity.githubuser.GitHubUser
+import xyz.androidrey.githubclient.common.data.entity.githubuser.GithubUser
 import xyz.androidrey.githubclient.common.data.entity.repository.Repository
 import xyz.androidrey.githubclient.common.data.entity.user.User
 import xyz.androidrey.githubclient.main.data.source.local.UserDao
@@ -14,8 +14,7 @@ import javax.inject.Inject
 class MainRepositoryImpl @Inject constructor(
     private val requestHandler: RequestHandler,
     private val userDao: UserDao
-) :
-    MainRepository {
+) : MainRepository {
     override suspend fun getUsersList(): NetworkResult<List<User>> {
         requestHandler.setBearerToken(BuildConfig.access_token)
         return requestHandler.get<List<User>>(
@@ -24,9 +23,32 @@ class MainRepositoryImpl @Inject constructor(
         )
     }
 
-    override suspend fun getUserDetails(userName: String): NetworkResult<GitHubUser> {
+    override suspend fun getUsersListWithCache(): NetworkResult<List<User>> {
         requestHandler.setBearerToken(BuildConfig.access_token)
-        return requestHandler.get<GitHubUser>(
+        return when (val result = requestHandler.get<List<User>>(
+            urlPathSegments = listOf("users"),
+            queryParams = mapOf("since" to "0", "per_page" to "50")
+        )) {
+            is NetworkResult.Success -> {
+                cacheUsers(result.result)
+                val cached = getCachedUsers()
+                NetworkResult.Success(cached)
+            }
+
+            is NetworkResult.Error -> {
+                val cached = getCachedUsers()
+                if (cached.isNotEmpty()) {
+                    NetworkResult.Success(cached)
+                } else {
+                    result
+                }
+            }
+        }
+    }
+
+    override suspend fun getUserDetails(userName: String): NetworkResult<GithubUser> {
+        requestHandler.setBearerToken(BuildConfig.access_token)
+        return requestHandler.get<GithubUser>(
             urlPathSegments = listOf("users", userName)
         )
     }

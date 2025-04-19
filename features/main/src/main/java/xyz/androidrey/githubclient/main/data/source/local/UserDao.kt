@@ -6,15 +6,17 @@ import androidx.room.OnConflictStrategy
 import androidx.room.Query
 import kotlinx.coroutines.flow.Flow
 import xyz.androidrey.githubclient.common.data.entity.user.User
+import xyz.androidrey.githubclient.storage.UserDataSource
 
 @Dao
-interface UserDao {
+interface UserDao: UserDataSource{
     @Query("select * from USER_TABLE")
-    suspend fun getUsers(): List<User>
+    override suspend fun getUsers(): List<User>
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    suspend fun insertAll(users: List<User>)
+    override suspend fun insertAll(users: List<User>)
 
     @Query("SELECT * FROM USER_TABLE WHERE login LIKE '%' || :query || '%'")
-    fun searchUsers(query: String): Flow<List<User>>
+    override fun searchUsers(query: String): Flow<List<User>>
+
 }

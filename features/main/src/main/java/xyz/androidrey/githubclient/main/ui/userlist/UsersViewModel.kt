@@ -23,19 +23,20 @@ import javax.inject.Inject
 class UsersViewModel @Inject constructor(
     private val rep: MainRepository
 ) : ViewModel() {
-    private val _uiState = MutableStateFlow<UsersUiState>(UsersUiState.Loading)
-    val uiState = _uiState.asStateFlow()
 
     private val _searchQuery = MutableStateFlow("")
     val searchQuery = _searchQuery.asStateFlow()
+    private val _uiState = MutableStateFlow<UsersUiState>(UsersUiState.Loading)
+    val uiState = _uiState.asStateFlow()
 
-    val searchedUsers = searchQuery.debounce(300).flatMapLatest { query ->
-        if (query.isBlank()) {
-            flow { emit(rep.getCachedUsers()) }
-        } else {
-            rep.searchCachedUsers(query)
+
+    val searchedUsers = searchQuery
+        .debounce(300)
+        .flatMapLatest { query ->
+            if (query.isBlank()) flow { emit(rep.getCachedUsers()) }
+            else rep.searchCachedUsers(query)
         }
-    }.stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000), emptyList<User>())
+        .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000), emptyList())
 
     init {
         getUsers()
@@ -48,22 +49,15 @@ class UsersViewModel @Inject constructor(
     private fun getUsers() {
         _uiState.value = UsersUiState.Loading
         viewModelScope.launch {
-            when (val status = rep.getUsersList()) {
-                is NetworkResult.Error -> {
-                    val offlineList = rep.getCachedUsers()
-                    if (offlineList.isNotEmpty()) {
-                        _uiState.value = UsersUiState.Success(offlineList)
-                    } else {
-                        _uiState.value = UsersUiState.Error(status.exception.message!!)
-                    }
+            when (val result = rep.getUsersListWithCache()) {
+                is NetworkResult.Success -> {
+                    _uiState.value = UsersUiState.Success(result.result)
                 }
 
-                is NetworkResult.Success -> {
-                    rep.cacheUsers(status.result)
-                    _uiState.value = UsersUiState.Success(rep.getCachedUsers())
+                is NetworkResult.Error -> {
+                    _uiState.value = UsersUiState.Error(result.exception.message ?: "Unknown error")
                 }
             }
-
         }
     }
 }

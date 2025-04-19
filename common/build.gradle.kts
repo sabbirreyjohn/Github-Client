@@ -19,7 +19,6 @@ android {
 dependencies {
     implementation(projects.network)
     implementation(projects.theme)
-    implementation(projects.storage)
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.lifecycle.runtime.ktx)
     implementation(libs.androidx.activity.compose)

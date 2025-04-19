@@ -30,6 +30,7 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
+import androidx.room.Query
 import coil.compose.AsyncImage
 import xyz.androidrey.githubclient.common.data.entity.user.User
 import xyz.androidrey.githubclient.common.data.util.createDummyUser
@@ -38,10 +39,10 @@ import xyz.androidrey.githubclient.theme.components.ThePreview
 @Composable
 fun UserList(
     users: List<User>,
+    query: String,
     viewModel: UsersViewModel,
     onSelect: (String) -> Unit
 ) {
-    val query by viewModel.searchQuery.collectAsState()
 
     Column {
         // 🔍 Search Bar
