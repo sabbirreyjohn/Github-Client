@@ -65,7 +65,7 @@ class RequestHandler(val httpClient: HttpClient) {
                         else -> NetworkException.NotFoundException("API Not found", e)
                     }
                 } else {
-                    NetworkException.UnknownException(e.message ?: "Unknown error", e)
+                    NetworkException.UnknownException(e.message ?: "Network Error", e)
                 }
                 NetworkResult.Error(null, networkException)
             }

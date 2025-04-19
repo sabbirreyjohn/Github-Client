@@ -1,7 +1,10 @@
 package xyz.androidrey.githubclient.common.data.entity.user
 
+import androidx.room.Entity
+import androidx.room.PrimaryKey
 import kotlinx.serialization.Serializable
 
+@Entity(tableName = "user_table")
 @Serializable
 data class User(
     val avatar_url: String,
@@ -11,7 +14,7 @@ data class User(
     val gists_url: String,
     val gravatar_id: String,
     val html_url: String,
-    val id: Int,
+    @PrimaryKey val id: Int,
     val login: String,
     val node_id: String,
     val organizations_url: String,

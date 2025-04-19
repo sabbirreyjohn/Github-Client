@@ -6,7 +6,6 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
@@ -14,10 +13,14 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Search
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
+import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextField
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
@@ -27,40 +30,61 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
-import androidx.navigation.NavController
 import coil.compose.AsyncImage
 import xyz.androidrey.githubclient.common.data.entity.user.User
 import xyz.androidrey.githubclient.common.data.util.createDummyUser
-import xyz.androidrey.githubclient.common.ui.screen.MainScreen
-import xyz.androidrey.githubclient.theme.components.AppBar
 import xyz.androidrey.githubclient.theme.components.ThePreview
 
 @Composable
-fun HomeScreen(viewModel: UsersViewModel, navController: NavController) {
+fun UserList(
+    users: List<User>,
+    viewModel: UsersViewModel,
+    onSelect: (String) -> Unit
+) {
+    val query by viewModel.searchQuery.collectAsState()
 
-    val uiState by viewModel.uiState.collectAsState()
-    Column(modifier = Modifier.fillMaxSize()) {
-        AppBar("Github Client")
-        HomeUiStateHandler(uiState, success = {
-            UserList(it) { name ->
-                navController.navigate(MainScreen.Repository(name))
+    Column {
+        // 🔍 Search Bar
+       TextField(
+            value = query,
+            onValueChange = { viewModel.updateSearchQuery(it) },
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(16.dp),
+            placeholder = { Text("Search users...") },
+            leadingIcon = {
+                Icon(
+                    imageVector = Icons.Default.Search,
+                    contentDescription = "Search"
+                )
+            },
+            singleLine = true,
+            shape = RoundedCornerShape(12.dp)
+        )
 
+        // 👤 User List
+        LazyColumn(
+            contentPadding = PaddingValues(horizontal = 8.dp, vertical = 8.dp),
+            verticalArrangement = Arrangement.spacedBy(8.dp)
+        ) {
+            items(users.size) { userIndex ->
+                val user = users[userIndex]
+                UserCard(user = user) {
+                    onSelect(it)
+                }
             }
-        })
 
-    }
-}
-
-@Composable
-fun UserList(users: List<User>, onSelect: (String) -> Unit) {
-    LazyColumn(
-        contentPadding = PaddingValues(horizontal = 8.dp, vertical = 8.dp),
-        verticalArrangement = Arrangement.spacedBy(8.dp)
-    ) {
-        items(users.size) { userIndex ->
-            val user = users[userIndex]
-            UserCard(user = user) {
-                onSelect(it)
+            // 🚫 Optional: empty state
+            if (users.isEmpty()) {
+                item {
+                    Text(
+                        text = "No users found",
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(32.dp),
+                        style = MaterialTheme.typography.bodyMedium
+                    )
+                }
             }
         }
     }
@@ -112,15 +136,8 @@ fun UserCard(
     }
 }
 
-
-
-
-
-
-
 @ThePreview
 @Composable
 fun TeacherCardPreview() {
-
     UserCard(user=createDummyUser()){}
 }

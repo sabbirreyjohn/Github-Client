@@ -7,20 +7,12 @@ import androidx.compose.material3.lightColorScheme
 import androidx.compose.material3.darkColorScheme
 import androidx.compose.material3.dynamicDarkColorScheme
 import androidx.compose.material3.dynamicLightColorScheme
+import androidx.compose.material3.Typography
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.Immutable
-import androidx.compose.runtime.SideEffect
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.toArgb
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.platform.LocalView
-import androidx.core.view.WindowCompat
-
-@Immutable
-data class ExtendedColorScheme(
-    val primaryDark: ColorFamily,
-    val primaryLight: ColorFamily,
-)
 
 private val lightScheme = lightColorScheme(
     primary = primaryLight,
@@ -208,96 +200,6 @@ private val highContrastDarkColorScheme = darkColorScheme(
     inversePrimary = inversePrimaryDarkHighContrast
 )
 
-val extendedLight = ExtendedColorScheme(
-  primaryDark = ColorFamily(
-  primaryDarkLight,
-  onPrimaryDarkLight,
-  primaryDarkContainerLight,
-  onPrimaryDarkContainerLight,
-  ),
-  primaryLight = ColorFamily(
-  primaryLightLight,
-  onPrimaryLightLight,
-  primaryLightContainerLight,
-  onPrimaryLightContainerLight,
-  ),
-)
-
-val extendedDark = ExtendedColorScheme(
-  primaryDark = ColorFamily(
-  primaryDarkDark,
-  onPrimaryDarkDark,
-  primaryDarkContainerDark,
-  onPrimaryDarkContainerDark,
-  ),
-  primaryLight = ColorFamily(
-  primaryLightDark,
-  onPrimaryLightDark,
-  primaryLightContainerDark,
-  onPrimaryLightContainerDark,
-  ),
-)
-
-val extendedLightMediumContrast = ExtendedColorScheme(
-  primaryDark = ColorFamily(
-  primaryDarkLightMediumContrast,
-  onPrimaryDarkLightMediumContrast,
-  primaryDarkContainerLightMediumContrast,
-  onPrimaryDarkContainerLightMediumContrast,
-  ),
-  primaryLight = ColorFamily(
-  primaryLightLightMediumContrast,
-  onPrimaryLightLightMediumContrast,
-  primaryLightContainerLightMediumContrast,
-  onPrimaryLightContainerLightMediumContrast,
-  ),
-)
-
-val extendedLightHighContrast = ExtendedColorScheme(
-  primaryDark = ColorFamily(
-  primaryDarkLightHighContrast,
-  onPrimaryDarkLightHighContrast,
-  primaryDarkContainerLightHighContrast,
-  onPrimaryDarkContainerLightHighContrast,
-  ),
-  primaryLight = ColorFamily(
-  primaryLightLightHighContrast,
-  onPrimaryLightLightHighContrast,
-  primaryLightContainerLightHighContrast,
-  onPrimaryLightContainerLightHighContrast,
-  ),
-)
-
-val extendedDarkMediumContrast = ExtendedColorScheme(
-  primaryDark = ColorFamily(
-  primaryDarkDarkMediumContrast,
-  onPrimaryDarkDarkMediumContrast,
-  primaryDarkContainerDarkMediumContrast,
-  onPrimaryDarkContainerDarkMediumContrast,
-  ),
-  primaryLight = ColorFamily(
-  primaryLightDarkMediumContrast,
-  onPrimaryLightDarkMediumContrast,
-  primaryLightContainerDarkMediumContrast,
-  onPrimaryLightContainerDarkMediumContrast,
-  ),
-)
-
-val extendedDarkHighContrast = ExtendedColorScheme(
-  primaryDark = ColorFamily(
-  primaryDarkDarkHighContrast,
-  onPrimaryDarkDarkHighContrast,
-  primaryDarkContainerDarkHighContrast,
-  onPrimaryDarkContainerDarkHighContrast,
-  ),
-  primaryLight = ColorFamily(
-  primaryLightDarkHighContrast,
-  onPrimaryLightDarkHighContrast,
-  primaryLightContainerDarkHighContrast,
-  onPrimaryLightContainerDarkHighContrast,
-  ),
-)
-
 @Immutable
 data class ColorFamily(
     val color: Color,
@@ -326,15 +228,6 @@ fun AppTheme(
       darkTheme -> darkScheme
       else -> lightScheme
   }
-
-    val view = LocalView.current
-    if (!view.isInEditMode) {
-        SideEffect {
-            val window = (view.context as Activity).window
-            window.statusBarColor = primaryContainerLight.toArgb() // change color status bar here
-            WindowCompat.getInsetsController(window, view).isAppearanceLightStatusBars = !darkTheme
-        }
-    }
 
   MaterialTheme(
     colorScheme = colorScheme,

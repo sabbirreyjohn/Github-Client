@@ -15,6 +15,6 @@ fun  HomeUiStateHandler(
     when (state) {
         is UsersUiState.Error -> error(state.message)
         is UsersUiState.Loading -> loading()
-        is UsersUiState.Success -> success(state.teachers)
+        is UsersUiState.Success -> success(state.users)
     }
 }

@@ -39,6 +39,11 @@ dependencies {
     implementation(libs.hilt.compose)
     ksp(libs.hilt.compiler.ksp)
 
+    implementation(libs.room.runtime)
+    implementation(libs.room.ktx)
+    implementation(libs.room.paging)
+    ksp(libs.room.compiler)
+
     implementation(libs.ktor.client.core)
     implementation(libs.ktor.client.android)
     implementation(libs.ktor.serialization)

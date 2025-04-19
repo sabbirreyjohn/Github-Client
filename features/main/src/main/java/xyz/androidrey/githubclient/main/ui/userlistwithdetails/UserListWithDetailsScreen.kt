@@ -25,20 +25,18 @@ import xyz.androidrey.githubclient.theme.components.AppBar
 @Composable
 fun UserListWithDetailsScreen(viewModel: UsersViewModel) {
     val usersState by viewModel.uiState.collectAsState()
-
+    val searchedUsers by viewModel.searchedUsers.collectAsState()
     val scaffoldNavigator = rememberListDetailPaneScaffoldNavigator<String>()
     val scope = rememberCoroutineScope()
     val currentUser = scaffoldNavigator.currentDestination?.contentKey
     Column {
-        AppBar(title = if (currentUser != null) "$currentUser's Repositories" else "GitHub Client")
+        AppBar(title = if (currentUser != null) "$currentUser's Repos" else "GitHub Client")
         NavigableListDetailPaneScaffold(
             navigator = scaffoldNavigator,
             listPane = {
-
                 AnimatedPane {
-
                     HomeUiStateHandler(usersState) { users ->
-                        UserList(users = users) { login ->
+                        UserList(users = searchedUsers, viewModel = viewModel) { login ->
                             scope.launch {
                                 scaffoldNavigator.navigateTo(
                                     ListDetailPaneScaffoldRole.Detail,
@@ -46,7 +44,6 @@ fun UserListWithDetailsScreen(viewModel: UsersViewModel) {
                                 )
                             }
                         }
-
                     }
                 }
             },
@@ -64,7 +61,7 @@ fun UserListWithDetailsScreen(viewModel: UsersViewModel) {
                             navController = rememberNavController()
                         )
 
-                    }?: Text(text = "No user selected")
+                    } ?: Text(text = "No user selected")
                 }
             },
         )
