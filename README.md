@@ -130,12 +130,30 @@ The following features were considered but intentionally skipped to keep the pro
 
 ## 📸 Screenshots
 
-| | | |
-|--|--|--|
-| ![](screenshots/user_list_screen1.png) | ![](screenshots/user_list_screen2.png) | ![](screenshots/search_result.png) |
-| ![](screenshots/repository_details.png) | ![](screenshots/loading_shimmer.png) | ![](screenshots/landscape_mode.png) |
-| ![](screenshots/theme_support.png) | ![](screenshots/error_state.png) | ![](screenshots/no_user_found.png) |
-| ![](screenshots/custom_tab.png) |  |  |
+<div align="center">
+
+<table>
+  <tr>
+    <td><img src="screenshots/user_list_screen.png" width="200"/></td>
+    <td><img src="screenshots/user_search.png" width="200"/></td>
+    <td><img src="screenshots/user_list_loading_shimmer.png" width="200"/></td>
+  </tr>
+  <tr>
+    <td><img src="screenshots/repository_details.png" width="200"/></td>
+    <td><img src="screenshots/repository_shimmer.png" width="200"/></td>
+    <td><img src="screenshots/no_repo_placeholder.png" width="200"/></td>
+  </tr>
+  <tr>
+    <td><img src="screenshots/landscape_mode1.png" width="200"/></td>
+    <td><img src="screenshots/landscape_mode2.png" width="200"/></td>
+    <td><img src="screenshots/error_placeholder.png" width="200"/></td>
+  </tr>
+  <tr>
+    <td><img src="screenshots/repo_web.png" width="200"/></td>
+  </tr>
+</table>
+
+</div>
 
 > 📌 You can click each image to zoom on GitHub web view.
 
