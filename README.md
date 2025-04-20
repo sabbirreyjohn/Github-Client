@@ -116,22 +116,28 @@ The following features were considered but intentionally skipped to keep the pro
 ## 📁 Project Structure
 
 ```
-├── app/
-│   ├── features/
-│   │   ├── main/
-│   │   └── auth/
-│   ├── common/         # Shared data models
-│   ├── storage/        # Room, DataStore
-│   ├── theme/          # Compose theming
+├── app/                  # Main app module (entry point)
+├── features/
+│   ├── main/             # User list & repository screen
+│   └── auth/             # (if implemented)
+├── common/               # Shared data models & constants
+├── storage/              # Room DB, DataStore
+├── network/              # Ktor request handler
+├── theme/                # Jetpack Compose theming
 ```
 
 ---
 
 ## 📸 Screenshots
 
-| User List | Repository View |
-|-----------|------------------|
-| ![User List](screenshots/user_list_screen) | ![Repository](screenshots/repository_details.png) |
+| | | |
+|--|--|--|
+| ![](screenshots/user_list_screen1.png) | ![](screenshots/user_list_screen2.png) | ![](screenshots/search_result.png) |
+| ![](screenshots/repository_details.png) | ![](screenshots/loading_shimmer.png) | ![](screenshots/landscape_mode.png) |
+| ![](screenshots/theme_support.png) | ![](screenshots/error_state.png) | ![](screenshots/no_user_found.png) |
+| ![](screenshots/custom_tab.png) |  |  |
+
+> 📌 You can click each image to zoom on GitHub web view.
 
 ---
 
@@ -139,13 +145,11 @@ The following features were considered but intentionally skipped to keep the pro
 
 [![Watch Demo](https://img.youtube.com/vi/pzxTVq5kKnE/0.jpg)](https://www.youtube.com/watch?v=pzxTVq5kKnE)
 
-> Replace `YOUTUBE_VIDEO_ID` with your actual video ID
-
 ---
 
 ## 👤 Developer
 
 **Md Sabbir Ahmed Khan**  
 Android Developer | Kotlin & Compose Enthusiast  
-🇸🇬 Singapore | 📧 md.sabbir.ahmed.khan@gmail.com  
+🇸🇬 Singapore | 📧 rey.sabbir@gmail.com  
 🔗 [GitHub](https://github.com/androidrey)
