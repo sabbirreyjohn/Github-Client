@@ -8,12 +8,17 @@ import androidx.compose.material3.adaptive.layout.ListDetailPaneScaffoldRole
 import androidx.compose.material3.adaptive.navigation.NavigableListDetailPaneScaffold
 import androidx.compose.material3.adaptive.navigation.rememberListDetailPaneScaffoldNavigator
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.saveable.rememberSaveable
+import androidx.compose.runtime.setValue
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.compose.rememberNavController
 import kotlinx.coroutines.launch
+import xyz.androidrey.githubclient.main.ui.composable.EmptyDetailPlaceholder
 import xyz.androidrey.githubclient.main.ui.userlist.HomeUiStateHandler
 import xyz.androidrey.githubclient.main.ui.userlist.UserList
 import xyz.androidrey.githubclient.main.ui.userlist.UsersViewModel
@@ -29,9 +34,18 @@ fun UserListWithDetailsScreen(viewModel: UsersViewModel) {
     val query by viewModel.searchQuery.collectAsState()
     val scaffoldNavigator = rememberListDetailPaneScaffoldNavigator<String>()
     val scope = rememberCoroutineScope()
-    val currentUser = scaffoldNavigator.currentDestination?.contentKey
+    val currentUser = rememberSaveable { mutableStateOf<String?>(null) }
+
+    val isNavigatedFromList =
+        scaffoldNavigator.currentDestination?.pane == ListDetailPaneScaffoldRole.List
+
+    LaunchedEffect(isNavigatedFromList) {
+        if (isNavigatedFromList && currentUser.value == null) {
+            currentUser.value = null
+        }
+    }
     Column {
-        AppBar(title = if (currentUser != null) "$currentUser's Repos" else "GitHub Client")
+        AppBar(title = if (currentUser.value != null) "${currentUser.value}'s Repos" else "GitHub Client")
         NavigableListDetailPaneScaffold(
             navigator = scaffoldNavigator,
             listPane = {
@@ -39,6 +53,7 @@ fun UserListWithDetailsScreen(viewModel: UsersViewModel) {
                     HomeUiStateHandler(uiState) { users ->
                         val userList = if (query.isBlank()) users else searchedUsers
                         UserList(users = userList, query = query, viewModel = viewModel) { login ->
+                            currentUser.value = login
                             scope.launch {
                                 scaffoldNavigator.navigateTo(
                                     ListDetailPaneScaffoldRole.Detail,
@@ -51,19 +66,27 @@ fun UserListWithDetailsScreen(viewModel: UsersViewModel) {
             },
             detailPane = {
                 AnimatedPane {
-                    scaffoldNavigator.currentDestination?.contentKey?.let {
+                    val pane = scaffoldNavigator.currentDestination?.pane
+                    val userName = currentUser.value
+                    if (pane == ListDetailPaneScaffoldRole.Detail && userName != null) {
                         val viewModel =
                             hiltViewModel<UserRepositoryViewModel, UserRepositoryViewModel.Factory>(
-                                key = it,
-                                creationCallback = { factory -> factory.create(it) }
+                                key = userName,
+                                creationCallback = { factory -> factory.create(userName) }
                             )
+
                         UserRepositoryScreen(
-                            userName = it,
+                            userName = userName,
                             viewModel = viewModel,
                             navController = rememberNavController()
                         )
+                    } else {
+                        EmptyDetailPlaceholder(
+                            "No user selected",
+                            "Tap on a user from the list to see their repositories.",
 
-                    } ?: Text(text = "No user selected")
+                            )
+                    }
                 }
             },
         )

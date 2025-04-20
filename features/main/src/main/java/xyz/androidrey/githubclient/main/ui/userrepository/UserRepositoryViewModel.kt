@@ -21,7 +21,11 @@ class UserRepositoryViewModel @AssistedInject constructor(
     private val _uiState = MutableStateFlow<UserRepositoryUiState>(UserRepositoryUiState.Loading)
     val uiState = _uiState.asStateFlow()
 
+    private var loaded = false
+
     fun load() {
+        if (loaded) return
+        loaded = true
         getUserDetailsAndRepositories(userName)
     }
 
