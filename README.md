@@ -4,11 +4,11 @@ A modern Android application built using Kotlin and Jetpack Compose that display
 
 ---
 
-## ✅ Core Features (as per requirements)
+## ✅ Core Features
 
-The following features were explicitly mentioned in the provided instructions and have been fully implemented:
+The following features have been fully implemented:
 
-- ✅ **GitHub user list** fetched from `https://api.github.com/users`
+- ✅ **GitHub user list** fetched from `https://developer.github.com/v3/`
 - ✅ **Search functionality** to filter users by username
 - ✅ **Clicking a user** navigates to a detail screen showing their public repositories
 - ✅ **Repository list** includes name, description, stars, and language
@@ -22,12 +22,12 @@ The following features were explicitly mentioned in the provided instructions an
 
 ## ✨ Additional Features Added
 
-Beyond the requirements, the following extra enhancements were implemented:
+The following extra enhancements were implemented:
 
 - ⚡ **Offline support** via Room database for both users and search
 - 📱 **Adaptive UI** with `ListDetailPaneScaffold` for landscape and tablet-friendly layout
 - 🔁 **Custom shimmer loading effect** without using external libraries
-- 🧪 **Multiple test cases** covering ViewModel, UI, DAO with `mockk`, `turbine`, `coroutines-test`
+- 🧪 **Multiple test cases** covering ViewModel, UI, DAO with `mockk`, `espresso`, `coroutines-test`
 - 🧩 **Clean modular structure** using separate modules for features, data, storage, theme, and common
 - 🔐 **Secure token & base URL config** through `local.properties`
 - 🌐 **Chrome Custom Tabs** used to open repository links externally
@@ -55,7 +55,7 @@ Create a file named `local.properties` in the project root, and add:
 
 ```properties
 base_url=https://api.github.com
-access_token=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
+access_token=YOUR_ACCESS_TOKEN
 ```
 
 > Replace `access_token` with your GitHub personal access token
@@ -73,7 +73,7 @@ access_token=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
 - `UserListScreenTest` with Compose UI Test
 
 ### 🛠 Tools
-- `mockk`, `turbine`, `coroutines-test`, `compose-ui-test`, `junit`
+- `mockk`, `espresso`, `coroutines-test`, `compose-ui-test`, `junit`
 
 ---
 
