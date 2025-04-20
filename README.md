@@ -131,13 +131,13 @@ The following features were considered but intentionally skipped to keep the pro
 
 | User List | Repository View |
 |-----------|------------------|
-| ![User List](screenshots/user_list.png) | ![Repository](screenshots/repo_screen.png) |
+| ![User List](screenshots/user_list_screen) | ![Repository](screenshots/repository_details.png) |
 
 ---
 
 ## 🎥 Demo Video
 
-[![Watch Demo](https://img.youtube.com/vi/YOUTUBE_VIDEO_ID/0.jpg)](https://www.youtube.com/watch?v=YOUTUBE_VIDEO_ID)
+[![Watch Demo](https://img.youtube.com/vi/pzxTVq5kKnE/0.jpg)](https://www.youtube.com/watch?v=pzxTVq5kKnE)
 
 > Replace `YOUTUBE_VIDEO_ID` with your actual video ID
 
