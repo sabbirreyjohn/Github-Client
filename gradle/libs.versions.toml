@@ -2,6 +2,8 @@
 agp = "8.9.1"
 browser = "1.8.0"
 constraintlayoutCompose = "1.1.0"
+core = "1.6.1"
+coreTesting = "2.2.0"
 kmpauthGoogle = "2.3.0-beta01"
 kmpauthUihelper = "2.3.0-beta01"
 kotlin = "1.9.23"
@@ -23,6 +25,8 @@ room = "2.6.1"
 moshi-kotlin = "1.15.1"
 retrofit-moshi-converter = "2.9.0"
 mockk = "1.13.9"
+rules = "1.6.1"
+runner = "1.6.2"
 truth = "1.4.0"
 dataStore = "1.1.1"
 spotless = "6.19.0"
@@ -46,6 +50,8 @@ firebaseAuth = "23.1.0"
 protobuf = "0.9.4"
 kotlinCoroutines = "1.7.3"
 adaptiveNavigationAndroid = "1.1.0"
+kotlinxCoroutinesTest = "1.9.0"
+navigationTesting = "2.8.5"
 
 [libraries]
 androidx-adaptive = { module = "androidx.compose.material3.adaptive:adaptive" }
@@ -53,9 +59,13 @@ androidx-adaptive-layout = { module = "androidx.compose.material3.adaptive:adapt
 androidx-adaptive-navigation = { module = "androidx.compose.material3.adaptive:adaptive-navigation" }
 androidx-browser = { module = "androidx.browser:browser", version.ref = "browser" }
 androidx-constraintlayout-compose = { module = "androidx.constraintlayout:constraintlayout-compose", version.ref = "constraintlayoutCompose" }
+androidx-core = { module = "androidx.test:core", version.ref = "core" }
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
 androidx-datastore = { module = "androidx.datastore:datastore", version.ref = "dataStore" }
 androidx-datastore-preferences = { module = "androidx.datastore:datastore-preferences", version.ref = "dataStore" }
+androidx-rules = { module = "androidx.test:rules", version.ref = "rules" }
+androidx-runner = { module = "androidx.test:runner", version.ref = "runner" }
+androidx-core-testing = { module = "androidx.arch.core:core-testing", version.ref = "coreTesting" }
 junit = { group = "junit", name = "junit", version.ref = "junit" }
 androidx-junit = { group = "androidx.test.ext", name = "junit", version.ref = "junitVersion" }
 androidx-espresso-core = { group = "androidx.test.espresso", name = "espresso-core", version.ref = "espressoCore" }
@@ -70,6 +80,7 @@ androidx-ui-test-manifest = { group = "androidx.compose.ui", name = "ui-test-man
 androidx-ui-test-junit4 = { group = "androidx.compose.ui", name = "ui-test-junit4" }
 androidx-material3 = { group = "androidx.compose.material3", name = "material3" }
 androidx-lifecycle-runtime-compose = { group = "androidx.lifecycle", name = "lifecycle-runtime-compose", version.ref = "lifecycleRuntimeKtx" }
+androidx-navigation-testing = { group = "androidx.navigation", name = "navigation-testing", version.ref = "navigationTesting" }
 
 kmpauth-google = { module = "io.github.mirzemehdi:kmpauth-google", version.ref = "kmpauthGoogle" }
 kmpauth-uihelper = { module = "io.github.mirzemehdi:kmpauth-uihelper", version.ref = "kmpauthUihelper" }
@@ -95,7 +106,7 @@ room-runtime = { group = "androidx.room", name = "room-runtime", version.ref = "
 room-compiler = { group = "androidx.room", name = "room-compiler", version.ref = "room" }
 room-ktx = { group = "androidx.room", name = "room-ktx", version.ref = "room" }
 room-paging = { group = "androidx.room", name = "room-paging", version.ref = "room" }
-
+kotlinx-coroutines-test-v190 = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-test", version.ref = "kotlinxCoroutinesTest" }
 moshi-kotlin = { group = "com.squareup.moshi", name = "moshi-kotlin", version.ref = "moshi-kotlin" }
 retrofit-moshi-converter = { group = "com.squareup.retrofit2", name = "converter-moshi", version.ref = "retrofit-moshi-converter" }
 

@@ -56,11 +56,26 @@ dependencies {
 
     implementation(libs.coil)
     implementation(libs.androidx.browser)
+
+
+
+
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
     androidTestImplementation(platform(libs.androidx.compose.bom))
     androidTestImplementation(libs.androidx.ui.test.junit4)
+    testImplementation(libs.mockk)
+    testImplementation (libs.kotlinx.coroutines.test.v190)
     debugImplementation(libs.androidx.ui.tooling)
     debugImplementation(libs.androidx.ui.test.manifest)
+    androidTestImplementation(libs.androidx.core.testing)
+    implementation(libs.androidx.navigation.testing)
+
+    androidTestImplementation (libs.androidx.core)
+    androidTestImplementation (libs.androidx.runner)
+    androidTestImplementation (libs.androidx.rules)
+
+
+    testImplementation(kotlin("test"))
 }
