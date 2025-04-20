@@ -33,9 +33,16 @@ fun UserListWithDetailsScreen(viewModel: UsersViewModel) {
     val scaffoldNavigator = rememberListDetailPaneScaffoldNavigator<String>()
     val scope = rememberCoroutineScope()
     val currentUser = rememberSaveable { mutableStateOf<String?>(null) }
+    val currentPane = scaffoldNavigator.currentDestination?.pane
 
     val isNavigatedFromList =
         scaffoldNavigator.currentDestination?.pane == ListDetailPaneScaffoldRole.List
+
+    LaunchedEffect(currentPane) {
+        if (currentPane == ListDetailPaneScaffoldRole.List) {
+            currentUser.value = null
+        }
+    }
 
     LaunchedEffect(isNavigatedFromList) {
         if (isNavigatedFromList && currentUser.value == null) {
