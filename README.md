@@ -170,4 +170,4 @@ The following features were considered but intentionally skipped to keep the pro
 **Md Sabbir Ahmed Khan**  
 Android Developer | Kotlin & Compose Enthusiast  
 🇸🇬 Singapore | 📧 rey.sabbir@gmail.com  
-🔗 [GitHub](https://github.com/androidrey)
+🔗 [GitHub](https://github.com/sabbirreyjohn)
