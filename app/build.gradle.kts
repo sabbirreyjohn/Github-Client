@@ -2,7 +2,7 @@ plugins {
     alias(libs.plugins.androidApplication)
     alias(libs.plugins.jetbrainsKotlinAndroid)
     alias(libs.plugins.hiltAndroid)
-    id("com.google.android.libraries.mapsplatform.secrets-gradle-plugin")
+    id(libs.plugins.gradle.secrets.get().pluginId)
     id(libs.plugins.ksp.get().pluginId)
     kotlin(libs.plugins.kotlinx.serialization.get().pluginId)
 }
@@ -48,17 +48,17 @@ dependencies {
     implementation(libs.hilt.android)
     ksp(libs.hilt.android.ksp)
     implementation(libs.hilt.compose)
-   ksp(libs.hilt.compiler.ksp)
+    ksp(libs.hilt.compiler.ksp)
 
     implementation(libs.androidx.datastore)
     implementation(libs.androidx.datastore.preferences)
-    implementation (libs.protobuf.javalite)
+    implementation(libs.protobuf.javalite)
 
     implementation(libs.kmpauth.google) {
-        exclude ("io.ktor")
+        exclude("io.ktor")
     }
-    implementation(libs.kmpauth.uihelper){
-        exclude ("io.ktor")
+    implementation(libs.kmpauth.uihelper) {
+        exclude("io.ktor")
     }
 
     testImplementation(libs.junit)

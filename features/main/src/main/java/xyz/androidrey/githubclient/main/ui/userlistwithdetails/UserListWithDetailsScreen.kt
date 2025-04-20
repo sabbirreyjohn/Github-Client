@@ -1,7 +1,6 @@
 package xyz.androidrey.githubclient.main.ui.userlistwithdetails
 
 import androidx.compose.foundation.layout.Column
-import androidx.compose.material3.Text
 import androidx.compose.material3.adaptive.ExperimentalMaterial3AdaptiveApi
 import androidx.compose.material3.adaptive.layout.AnimatedPane
 import androidx.compose.material3.adaptive.layout.ListDetailPaneScaffoldRole
@@ -14,17 +13,16 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.saveable.rememberSaveable
-import androidx.compose.runtime.setValue
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.compose.rememberNavController
 import kotlinx.coroutines.launch
-import xyz.androidrey.githubclient.main.ui.composable.EmptyDetailPlaceholder
 import xyz.androidrey.githubclient.main.ui.userlist.HomeUiStateHandler
 import xyz.androidrey.githubclient.main.ui.userlist.UserList
 import xyz.androidrey.githubclient.main.ui.userlist.UsersViewModel
 import xyz.androidrey.githubclient.main.ui.userrepository.UserRepositoryScreen
 import xyz.androidrey.githubclient.main.ui.userrepository.UserRepositoryViewModel
 import xyz.androidrey.githubclient.theme.components.AppBar
+import xyz.androidrey.githubclient.theme.components.placeholder.EmptyDetailPlaceholder
 
 @OptIn(ExperimentalMaterial3AdaptiveApi::class)
 @Composable

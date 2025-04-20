@@ -2,7 +2,7 @@ plugins {
     alias(libs.plugins.android.library)
     alias(libs.plugins.jetbrainsKotlinAndroid)
     alias(libs.plugins.hiltAndroid)
-    id("com.google.android.libraries.mapsplatform.secrets-gradle-plugin")
+    id(libs.plugins.gradle.secrets.get().pluginId)
     kotlin(libs.plugins.kotlinx.serialization.get().pluginId)
     alias(libs.plugins.ksp)
 }

@@ -1,4 +1,4 @@
-package xyz.androidrey.githubclient.main.ui.composable
+package xyz.androidrey.githubclient.theme.components.placeholder
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
