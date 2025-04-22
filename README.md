@@ -54,7 +54,7 @@ The following extra enhancements were implemented:
 Create a file named `local.properties` in the project root, and add:
 
 ```properties
-base_url=https://api.github.com
+base_url=api.github.com
 access_token=YOUR_ACCESS_TOKEN
 ```
 
