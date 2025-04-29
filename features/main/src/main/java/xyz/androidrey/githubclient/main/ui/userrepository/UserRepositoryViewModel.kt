@@ -10,6 +10,9 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
+import xyz.androidrey.githubclient.common.data.entity.githubuser.GithubUser
+import xyz.androidrey.githubclient.common.data.entity.repository.Repository
+import xyz.androidrey.githubclient.common.ui.state.UiState
 import xyz.androidrey.githubclient.main.domain.repository.MainRepository
 import xyz.androidrey.githubclient.network.NetworkResult
 
@@ -18,7 +21,7 @@ class UserRepositoryViewModel @AssistedInject constructor(
     private val repo: MainRepository,
     @Assisted private val userName: String
 ) : ViewModel() {
-    private val _uiState = MutableStateFlow<UserRepositoryUiState>(UserRepositoryUiState.Loading)
+    private val _uiState = MutableStateFlow<UiState<Pair<GithubUser, List<Repository>>>>(UiState.Loading)
     val uiState = _uiState.asStateFlow()
 
     private var loaded = false
@@ -30,19 +33,19 @@ class UserRepositoryViewModel @AssistedInject constructor(
     }
 
     private fun getUserDetailsAndRepositories(name: String) {
-        _uiState.value = UserRepositoryUiState.Loading
+        _uiState.value = UiState.Loading
         viewModelScope.launch {
             val userResult = repo.getUserDetails(name)
             val repoResult = repo.getRepository(name)
 
             if (userResult is NetworkResult.Success && repoResult is NetworkResult.Success) {
                 val nonForkedRepos = repoResult.result.filter { !it.fork }
-                _uiState.value = UserRepositoryUiState.Success(userResult.result, nonForkedRepos)
+                _uiState.value = UiState.Success(Pair(userResult.result, nonForkedRepos))
             } else {
                 val errorMsg = (userResult as? NetworkResult.Error)?.exception?.message
                     ?: (repoResult as? NetworkResult.Error)?.exception?.message
                     ?: "Unknown error"
-                _uiState.value = UserRepositoryUiState.Error(errorMsg)
+                _uiState.value = UiState.Error(errorMsg)
             }
         }
     }

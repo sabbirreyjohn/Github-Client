@@ -5,10 +5,12 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
+import kotlinx.serialization.InternalSerializationApi
 import xyz.androidrey.githubclient.common.ui.screen.MainScreen
 import xyz.androidrey.githubclient.main.ui.userlistwithdetails.UserListWithDetailsScreen
 
 
+@OptIn(InternalSerializationApi::class)
 @Composable
 fun MainNavGraph(navController: NavHostController) {
     NavHost(navController = navController, startDestination = MainScreen.UserList) {

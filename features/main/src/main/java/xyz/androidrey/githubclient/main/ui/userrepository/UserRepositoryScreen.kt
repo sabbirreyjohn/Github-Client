@@ -17,6 +17,7 @@ import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
+import androidx.compose.material3.Divider
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -33,8 +34,10 @@ import androidx.navigation.NavHostController
 import coil.compose.AsyncImage
 import xyz.androidrey.githubclient.common.data.entity.githubuser.GithubUser
 import xyz.androidrey.githubclient.common.data.entity.repository.Repository
+import xyz.androidrey.githubclient.common.ui.state.UiStateHandler
 import xyz.androidrey.githubclient.main.ui.repoweb.openCustomTab
 import xyz.androidrey.githubclient.theme.components.placeholder.EmptyDetailPlaceholder
+import xyz.androidrey.githubclient.theme.components.placeholder.RepositoryLoadingScreen
 
 @Composable
 fun UserRepositoryScreen(
@@ -48,9 +51,9 @@ fun UserRepositoryScreen(
         viewModel.load()
     }
 
-    UserRepositoryUiStateHandler(
+    UiStateHandler(
         state = uiState,
-        success = { user, repos ->
+        success = { userAndRepos ->
             LazyColumn(
                 modifier = Modifier
                     .fillMaxSize()
@@ -60,20 +63,20 @@ fun UserRepositoryScreen(
             ) {
                 // 👤 User Header
                 item {
-                    UserHeader(user = user)
+                    UserHeader(user = userAndRepos.first)
                     Spacer(modifier = Modifier.height(8.dp))
-                    androidx.compose.material3.Divider()
+                    Divider()
                 }
 
                 // 📦 Repo List
-                items(repos.size) { index ->
-                    val repo = repos[index]
+                items(userAndRepos.second.size) { index ->
+                    val repo = userAndRepos.second[index]
                     RepoCard(repo = repo) {
                         openCustomTab(context = navController.context, url = repo.htmlUrl)
                     }
                 }
 
-                if (repos.isEmpty()) {
+                if (userAndRepos.second.isEmpty()) {
                     item {
                         EmptyDetailPlaceholder(
                             "No public repositories found.",
@@ -82,7 +85,8 @@ fun UserRepositoryScreen(
                     }
                 }
             }
-        }
+        },
+        loading = { RepositoryLoadingScreen() }
     )
 }
 

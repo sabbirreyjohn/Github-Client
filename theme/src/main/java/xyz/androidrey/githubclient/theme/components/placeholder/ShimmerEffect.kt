@@ -1,4 +1,4 @@
-package xyz.androidrey.githubclient.theme.components.util
+package xyz.androidrey.githubclient.theme.components.placeholder
 
 import androidx.compose.animation.core.LinearEasing
 import androidx.compose.animation.core.RepeatMode
