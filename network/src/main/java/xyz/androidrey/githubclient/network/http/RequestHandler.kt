@@ -2,6 +2,7 @@ package xyz.androidrey.githubclient.network.http
 
 import io.ktor.client.HttpClient
 import io.ktor.client.call.body
+import io.ktor.client.plugins.HttpRequestTimeoutException
 import io.ktor.client.plugins.ResponseException
 import io.ktor.client.request.header
 import io.ktor.client.request.parameter
@@ -17,6 +18,7 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.withContext
 import xyz.androidrey.githubclient.network.NetworkException
 import xyz.androidrey.githubclient.network.NetworkResult
+import kotlin.coroutines.cancellation.CancellationException
 
 class RequestHandler(val httpClient: HttpClient) {
 
@@ -54,20 +56,30 @@ class RequestHandler(val httpClient: HttpClient) {
                 }.execute().body<R>()
                 NetworkResult.Success(response)
             } catch (e: Exception) {
-                val networkException = if (e is ResponseException) {
-                    val errorBody = e.response.body<DefaultError>()
-                    when (e.response.status) {
-                        HttpStatusCode.Unauthorized -> NetworkException.UnauthorizedException(
-                            errorBody.message,
-                            e,
-                        )
+                when (e) {
+                    is CancellationException -> throw e
+                    is ResponseException -> {
+                        val errorBody = try {
+                            e.response.body<DefaultError>()
+                        } catch (ex: Exception) {
+                            DefaultError("Unknown API Error")
+                        }
 
-                        else -> NetworkException.NotFoundException("API Not found", e)
+                        val exception = when (e.response.status) {
+                            HttpStatusCode.BadRequest -> NetworkException.BadRequestException(errorBody.message, e)
+                            HttpStatusCode.Unauthorized -> NetworkException.UnauthorizedException(errorBody.message, e)
+                            HttpStatusCode.Forbidden -> NetworkException.ForbiddenException(errorBody.message, e)
+                            HttpStatusCode.NotFound -> NetworkException.NotFoundException(errorBody.message, e)
+                            HttpStatusCode.InternalServerError -> NetworkException.ServerException(errorBody.message, e)
+                            HttpStatusCode.ServiceUnavailable -> NetworkException.ServiceUnavailableException(errorBody.message, e)
+                            else -> NetworkException.UnknownException(errorBody.message, e)
+                        }
+
+                        NetworkResult.Error(null, exception)
                     }
-                } else {
-                    NetworkException.UnknownException(e.message ?: "Network Error", e)
+                    is HttpRequestTimeoutException -> NetworkResult.Error(null, NetworkException.TimeoutException("Timeout", e))
+                    else -> NetworkResult.Error(null, NetworkException.UnknownException(e.message ?: "Unknown Error", e))
                 }
-                NetworkResult.Error(null, networkException)
             }
         }
     }

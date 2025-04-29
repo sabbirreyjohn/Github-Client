@@ -15,6 +15,7 @@ import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 import xyz.androidrey.githubclient.common.data.entity.user.User
+import xyz.androidrey.githubclient.common.ui.state.UiState
 import xyz.androidrey.githubclient.main.domain.repository.MainRepository
 import xyz.androidrey.githubclient.network.NetworkResult
 import javax.inject.Inject
@@ -26,7 +27,7 @@ class UsersViewModel @Inject constructor(
 
     private val _searchQuery = MutableStateFlow("")
     val searchQuery = _searchQuery.asStateFlow()
-    private val _uiState = MutableStateFlow<UsersUiState>(UsersUiState.Loading)
+    private val _uiState = MutableStateFlow<UiState<List<User>>>(UiState.Loading)
     val uiState = _uiState.asStateFlow()
 
 
@@ -47,15 +48,15 @@ class UsersViewModel @Inject constructor(
     }
 
     private fun getUsers() {
-        _uiState.value = UsersUiState.Loading
+        _uiState.value = UiState.Loading
         viewModelScope.launch {
             when (val result = rep.getUsersListWithCache()) {
                 is NetworkResult.Success -> {
-                    _uiState.value = UsersUiState.Success(result.result)
+                    _uiState.value = UiState.Success(result.result)
                 }
 
                 is NetworkResult.Error -> {
-                    _uiState.value = UsersUiState.Error(result.exception.message ?: "Unknown error")
+                    _uiState.value = UiState.Error(result.exception.message ?: "Unknown error")
                 }
             }
         }

@@ -14,7 +14,6 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.unit.dp
-import xyz.androidrey.githubclient.theme.components.util.shimmerEffect
 
 @Composable
 fun ShimmerUserCardPlaceholder() {

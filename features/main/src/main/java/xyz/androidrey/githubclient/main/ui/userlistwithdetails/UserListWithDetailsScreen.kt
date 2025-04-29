@@ -16,13 +16,14 @@ import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.compose.rememberNavController
 import kotlinx.coroutines.launch
-import xyz.androidrey.githubclient.main.ui.userlist.HomeUiStateHandler
+import xyz.androidrey.githubclient.common.ui.state.UiStateHandler
 import xyz.androidrey.githubclient.main.ui.userlist.UserList
 import xyz.androidrey.githubclient.main.ui.userlist.UsersViewModel
 import xyz.androidrey.githubclient.main.ui.userrepository.UserRepositoryScreen
 import xyz.androidrey.githubclient.main.ui.userrepository.UserRepositoryViewModel
 import xyz.androidrey.githubclient.theme.components.AppBar
 import xyz.androidrey.githubclient.theme.components.placeholder.EmptyDetailPlaceholder
+import xyz.androidrey.githubclient.theme.components.placeholder.UserLoadingScreen
 
 @OptIn(ExperimentalMaterial3AdaptiveApi::class)
 @Composable
@@ -55,7 +56,10 @@ fun UserListWithDetailsScreen(viewModel: UsersViewModel) {
             navigator = scaffoldNavigator,
             listPane = {
                 AnimatedPane {
-                    HomeUiStateHandler(uiState) { users ->
+                    UiStateHandler(
+                        uiState,
+                        loading = { UserLoadingScreen() }
+                    ) { users ->
                         val userList = if (query.isBlank()) users else searchedUsers
                         UserList(users = userList, query = query, viewModel = viewModel) { login ->
                             currentUser.value = login
