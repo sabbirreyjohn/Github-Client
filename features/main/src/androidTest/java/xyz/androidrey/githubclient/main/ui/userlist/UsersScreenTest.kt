@@ -14,6 +14,9 @@ import org.junit.Test
 import org.junit.runner.RunWith
 import xyz.androidrey.githubclient.main.data.repository.FakeMainRepositoryImpl
 import xyz.androidrey.githubclient.main.data.source.local.createDummyUsers
+import xyz.androidrey.githubclient.main.domain.usecase.users.GetCachedUsersUseCase
+import xyz.androidrey.githubclient.main.domain.usecase.users.GetUsersListWithCacheUseCase
+import xyz.androidrey.githubclient.main.domain.usecase.users.SearchCachedUsersUseCase
 
 @RunWith(AndroidJUnit4::class)
 class UsersScreenTest {
@@ -24,12 +27,19 @@ class UsersScreenTest {
     private lateinit var viewModel: UsersViewModel
     private lateinit var navController: TestNavHostController
 
+    private lateinit var fakeRepository: FakeMainRepositoryImpl
+
     private val dummyUsers = createDummyUsers(1)
 
     @Before
     fun setUp() {
+        fakeRepository = FakeMainRepositoryImpl(users = dummyUsers, searchResults = dummyUsers)
         viewModel =
-            UsersViewModel(FakeMainRepositoryImpl(users = dummyUsers, searchResults = dummyUsers))
+            UsersViewModel(
+                GetCachedUsersUseCase(fakeRepository),
+                SearchCachedUsersUseCase(fakeRepository),
+                GetUsersListWithCacheUseCase(fakeRepository)
+            )
         navController = TestNavHostController(ApplicationProvider.getApplicationContext())
     }
 

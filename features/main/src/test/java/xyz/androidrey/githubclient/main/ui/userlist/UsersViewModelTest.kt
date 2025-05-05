@@ -5,7 +5,6 @@ import io.mockk.mockk
 import junit.framework.TestCase.assertTrue
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
-import kotlinx.coroutines.cancel
 import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.test.StandardTestDispatcher
 import kotlinx.coroutines.test.advanceTimeBy
@@ -15,8 +14,11 @@ import kotlinx.coroutines.test.runTest
 import kotlinx.coroutines.test.setMain
 import org.junit.After
 import org.junit.Before
+import xyz.androidrey.githubclient.common.ui.state.UiState
 import xyz.androidrey.githubclient.main.data.repository.createDummyUsers
-import xyz.androidrey.githubclient.main.domain.repository.MainRepository
+import xyz.androidrey.githubclient.main.domain.usecase.users.GetCachedUsersUseCase
+import xyz.androidrey.githubclient.main.domain.usecase.users.GetUsersListWithCacheUseCase
+import xyz.androidrey.githubclient.main.domain.usecase.users.SearchCachedUsersUseCase
 import xyz.androidrey.githubclient.network.NetworkException
 import xyz.androidrey.githubclient.network.NetworkResult
 import kotlin.test.Test
@@ -25,7 +27,10 @@ import kotlin.test.assertEquals
 @ExperimentalCoroutinesApi
 class UsersViewModelTest {
 
-    private lateinit var repository: MainRepository
+    private lateinit var getCachedUsersUseCase: GetCachedUsersUseCase
+    private lateinit var searchCachedUsersUseCase: SearchCachedUsersUseCase
+    private lateinit var getUsersListWithCacheUseCase: GetUsersListWithCacheUseCase
+
 
     private lateinit var viewModel: UsersViewModel
 
@@ -36,7 +41,9 @@ class UsersViewModelTest {
     @Before
     fun setup() {
         Dispatchers.setMain(testDispatcher)
-        repository = mockk()
+        getCachedUsersUseCase = mockk()
+        searchCachedUsersUseCase = mockk()
+        getUsersListWithCacheUseCase = mockk()
 
     }
 
@@ -49,44 +56,56 @@ class UsersViewModelTest {
     @Test
     fun `initial uiState should emit Success when API returns users`() = runTest {
         // Arrange
-        coEvery { repository.getUsersListWithCache() } returns NetworkResult.Success(users)
-        coEvery { repository.getCachedUsers() } returns users
-        coEvery { repository.searchCachedUsers(any()) } returns flowOf(users)
+        coEvery { getUsersListWithCacheUseCase() } returns NetworkResult.Success(users)
+        coEvery { getCachedUsersUseCase() } returns users
+        coEvery { searchCachedUsersUseCase(any()) } returns flowOf(users)
 
         // Act
-        viewModel = UsersViewModel(repository)
+        viewModel = UsersViewModel(
+            getCachedUsersUseCase,
+            searchCachedUsersUseCase,
+            getUsersListWithCacheUseCase
+        )
         advanceUntilIdle()
 
         // Assert
         val state = viewModel.uiState.value
-        assertTrue(state is UsersUiState.Success)
-        assertEquals(users, (state as UsersUiState.Success).users)
+        assertTrue(state is UiState.Success)
+        assertEquals(users, (state as UiState.Success).data)
     }
 
     @Test
     fun `initial uiState should emit Error when API fails and no cache`() = runTest {
-        coEvery { repository.getUsersListWithCache() } returns NetworkResult.Error(
+        coEvery { getUsersListWithCacheUseCase() } returns NetworkResult.Error(
             exception = NetworkException.UnknownException("Network failed", Throwable()),
             body = "Network failed"
         )
-        coEvery { repository.getCachedUsers() } returns emptyList()
-        coEvery { repository.searchCachedUsers(any()) } returns flowOf(emptyList())
+        coEvery { getCachedUsersUseCase() } returns emptyList()
+        coEvery { searchCachedUsersUseCase(any()) } returns flowOf(emptyList())
 
-        viewModel = UsersViewModel(repository)
+        viewModel = UsersViewModel(
+            getCachedUsersUseCase,
+            searchCachedUsersUseCase,
+            getUsersListWithCacheUseCase
+        )
         advanceUntilIdle()
 
         val state = viewModel.uiState.value
-        assertTrue(state is UsersUiState.Error)
-        assertEquals("Network failed", (state as UsersUiState.Error).message)
+        assertTrue(state is UiState.Error)
+        assertEquals("Network failed", (state as UiState.Error).message)
     }
 
     @Test
     fun `updateSearchQuery should change searchQuery value`() = runTest {
-        coEvery { repository.getUsersListWithCache() } returns NetworkResult.Success(users)
-        coEvery { repository.getCachedUsers() } returns users
-        coEvery { repository.searchCachedUsers(any()) } returns flowOf(users)
+        coEvery { getUsersListWithCacheUseCase() } returns NetworkResult.Success(users)
+        coEvery { getCachedUsersUseCase() } returns users
+        coEvery { searchCachedUsersUseCase(any()) } returns flowOf(users)
 
-        viewModel = UsersViewModel(repository)
+        viewModel = UsersViewModel(
+            getCachedUsersUseCase,
+            searchCachedUsersUseCase,
+            getUsersListWithCacheUseCase
+        )
         viewModel.updateSearchQuery("android")
 
         assertEquals("android", viewModel.searchQuery.value)
@@ -96,11 +115,15 @@ class UsersViewModelTest {
     fun `searchedUsers should emit filtered users when query is not blank`() = runTest {
         val filtered = users.filter { it.login.contains("dev") }
 
-        coEvery { repository.getUsersListWithCache() } returns NetworkResult.Success(users)
-        coEvery { repository.getCachedUsers() } returns users
-        coEvery { repository.searchCachedUsers("dev") } returns flowOf(filtered)
+        coEvery { getUsersListWithCacheUseCase() } returns NetworkResult.Success(users)
+        coEvery { getCachedUsersUseCase() } returns users
+        coEvery { searchCachedUsersUseCase("dev") } returns flowOf(filtered)
 
-        viewModel = UsersViewModel(repository)
+        viewModel = UsersViewModel(
+            getCachedUsersUseCase,
+            searchCachedUsersUseCase,
+            getUsersListWithCacheUseCase
+        )
         viewModel.updateSearchQuery("dev")
         advanceTimeBy(400)
 
