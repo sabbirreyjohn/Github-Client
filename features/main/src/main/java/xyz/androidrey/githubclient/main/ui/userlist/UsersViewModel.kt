@@ -17,12 +17,19 @@ import kotlinx.coroutines.launch
 import xyz.androidrey.githubclient.common.data.entity.user.User
 import xyz.androidrey.githubclient.common.ui.state.UiState
 import xyz.androidrey.githubclient.main.domain.repository.MainRepository
+import xyz.androidrey.githubclient.main.domain.usecase.users.GetCachedUsersUseCase
+import xyz.androidrey.githubclient.main.domain.usecase.users.GetUsersListWithCacheUseCase
+import xyz.androidrey.githubclient.main.domain.usecase.users.SearchCachedUsersUseCase
 import xyz.androidrey.githubclient.network.NetworkResult
 import javax.inject.Inject
 
 @HiltViewModel
 class UsersViewModel @Inject constructor(
-    private val rep: MainRepository
+    private val getCachedUsersUseCase: GetCachedUsersUseCase,
+    private val searchCachedUsersUseCase: SearchCachedUsersUseCase,
+    private val getUsersListWithCacheUseCase: GetUsersListWithCacheUseCase
+
+
 ) : ViewModel() {
 
     private val _searchQuery = MutableStateFlow("")
@@ -34,8 +41,8 @@ class UsersViewModel @Inject constructor(
     val searchedUsers = searchQuery
         .debounce(300)
         .flatMapLatest { query ->
-            if (query.isBlank()) flow { emit(rep.getCachedUsers()) }
-            else rep.searchCachedUsers(query)
+            if (query.isBlank()) flow { emit(getCachedUsersUseCase.invoke()) }
+            else searchCachedUsersUseCase(query)
         }
         .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000), emptyList())
 
@@ -50,7 +57,7 @@ class UsersViewModel @Inject constructor(
     private fun getUsers() {
         _uiState.value = UiState.Loading
         viewModelScope.launch {
-            when (val result = rep.getUsersListWithCache()) {
+            when (val result = getUsersListWithCacheUseCase.invoke()) {
                 is NetworkResult.Success -> {
                     _uiState.value = UiState.Success(result.result)
                 }

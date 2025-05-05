@@ -14,11 +14,14 @@ import xyz.androidrey.githubclient.common.data.entity.githubuser.GithubUser
 import xyz.androidrey.githubclient.common.data.entity.repository.Repository
 import xyz.androidrey.githubclient.common.ui.state.UiState
 import xyz.androidrey.githubclient.main.domain.repository.MainRepository
+import xyz.androidrey.githubclient.main.domain.usecase.repository.GetRepositoryUseCase
+import xyz.androidrey.githubclient.main.domain.usecase.users.GetUserDetailsUseCase
 import xyz.androidrey.githubclient.network.NetworkResult
 
 @HiltViewModel(assistedFactory = UserRepositoryViewModel.Factory::class)
 class UserRepositoryViewModel @AssistedInject constructor(
-    private val repo: MainRepository,
+    private val getUserDetailsUseCase: GetUserDetailsUseCase,
+    private val getRepositoryUseCase: GetRepositoryUseCase,
     @Assisted private val userName: String
 ) : ViewModel() {
     private val _uiState = MutableStateFlow<UiState<Pair<GithubUser, List<Repository>>>>(UiState.Loading)
@@ -35,8 +38,8 @@ class UserRepositoryViewModel @AssistedInject constructor(
     private fun getUserDetailsAndRepositories(name: String) {
         _uiState.value = UiState.Loading
         viewModelScope.launch {
-            val userResult = repo.getUserDetails(name)
-            val repoResult = repo.getRepository(name)
+            val userResult = getUserDetailsUseCase(name)
+            val repoResult = getRepositoryUseCase(name)
 
             if (userResult is NetworkResult.Success && repoResult is NetworkResult.Success) {
                 val nonForkedRepos = repoResult.result.filter { !it.fork }
