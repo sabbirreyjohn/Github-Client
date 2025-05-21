@@ -10,6 +10,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.saveable.rememberSaveable
@@ -61,7 +62,11 @@ fun UserListWithDetailsScreen(viewModel: UsersViewModel) {
                         loading = { UserLoadingScreen() }
                     ) { users ->
                         val userList = if (query.isBlank()) users else searchedUsers
-                        UserList(users = userList, query = query, viewModel = viewModel) { login ->
+                        UserList(
+                            users = userList,
+                            query = query,
+                            onQueryChanged = viewModel::updateSearchQuery
+                        ) { login ->
                             currentUser.value = login
                             scope.launch {
                                 scaffoldNavigator.navigateTo(
@@ -78,15 +83,17 @@ fun UserListWithDetailsScreen(viewModel: UsersViewModel) {
                     val pane = scaffoldNavigator.currentDestination?.pane
                     val userName = currentUser.value
                     if (pane == ListDetailPaneScaffoldRole.Detail && userName != null) {
-                        val viewModel =
+                        val userRepoViewModel =
                             hiltViewModel<UserRepositoryViewModel, UserRepositoryViewModel.Factory>(
                                 key = userName,
                                 creationCallback = { factory -> factory.create(userName) }
                             )
+                        val uiState by userRepoViewModel.uiState.collectAsStateWithLifecycle()
 
                         UserRepositoryScreen(
                             userName = userName,
-                            viewModel = viewModel,
+                            uiState = uiState,
+                            onLoad = userRepoViewModel::load,
                             navController = rememberNavController()
                         )
                     } else {

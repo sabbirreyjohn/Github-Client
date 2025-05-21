@@ -14,13 +14,12 @@ import kotlinx.coroutines.test.runTest
 import kotlinx.coroutines.test.setMain
 import org.junit.After
 import org.junit.Before
+import xyz.androidrey.githubclient.common.domain.model.DomainResult
 import xyz.androidrey.githubclient.common.ui.state.UiState
 import xyz.androidrey.githubclient.main.data.repository.createDummyUsers
 import xyz.androidrey.githubclient.main.domain.usecase.users.GetCachedUsersUseCase
 import xyz.androidrey.githubclient.main.domain.usecase.users.GetUsersListWithCacheUseCase
 import xyz.androidrey.githubclient.main.domain.usecase.users.SearchCachedUsersUseCase
-import xyz.androidrey.githubclient.network.NetworkException
-import xyz.androidrey.githubclient.network.NetworkResult
 import kotlin.test.Test
 import kotlin.test.assertEquals
 
@@ -56,7 +55,7 @@ class UsersViewModelTest {
     @Test
     fun `initial uiState should emit Success when API returns users`() = runTest {
         // Arrange
-        coEvery { getUsersListWithCacheUseCase() } returns NetworkResult.Success(users)
+        coEvery { getUsersListWithCacheUseCase() } returns DomainResult.Success(users)
         coEvery { getCachedUsersUseCase() } returns users
         coEvery { searchCachedUsersUseCase(any()) } returns flowOf(users)
 
@@ -76,10 +75,7 @@ class UsersViewModelTest {
 
     @Test
     fun `initial uiState should emit Error when API fails and no cache`() = runTest {
-        coEvery { getUsersListWithCacheUseCase() } returns NetworkResult.Error(
-            exception = NetworkException.UnknownException("Network failed", Throwable()),
-            body = "Network failed"
-        )
+        coEvery { getUsersListWithCacheUseCase() } returns DomainResult.Error("Network failed")
         coEvery { getCachedUsersUseCase() } returns emptyList()
         coEvery { searchCachedUsersUseCase(any()) } returns flowOf(emptyList())
 
@@ -97,7 +93,7 @@ class UsersViewModelTest {
 
     @Test
     fun `updateSearchQuery should change searchQuery value`() = runTest {
-        coEvery { getUsersListWithCacheUseCase() } returns NetworkResult.Success(users)
+        coEvery { getUsersListWithCacheUseCase() } returns DomainResult.Success(users)
         coEvery { getCachedUsersUseCase() } returns users
         coEvery { searchCachedUsersUseCase(any()) } returns flowOf(users)
 
@@ -115,7 +111,7 @@ class UsersViewModelTest {
     fun `searchedUsers should emit filtered users when query is not blank`() = runTest {
         val filtered = users.filter { it.login.contains("dev") }
 
-        coEvery { getUsersListWithCacheUseCase() } returns NetworkResult.Success(users)
+        coEvery { getUsersListWithCacheUseCase() } returns DomainResult.Success(users)
         coEvery { getCachedUsersUseCase() } returns users
         coEvery { searchCachedUsersUseCase("dev") } returns flowOf(filtered)
 

@@ -42,13 +42,12 @@ import xyz.androidrey.githubclient.theme.components.placeholder.RepositoryLoadin
 @Composable
 fun UserRepositoryScreen(
     userName: String?,
-    viewModel: UserRepositoryViewModel,
+    uiState: xyz.androidrey.githubclient.common.ui.state.UiState<Pair<GithubUser, List<Repository>>>,
+    onLoad: () -> Unit,
     navController: NavHostController
 ) {
-    val uiState by viewModel.uiState.collectAsStateWithLifecycle()
-
     LaunchedEffect(userName) {
-        viewModel.load()
+        onLoad()
     }
 
     UiStateHandler(
