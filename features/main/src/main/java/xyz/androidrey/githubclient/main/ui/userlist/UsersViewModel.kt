@@ -15,12 +15,12 @@ import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 import xyz.androidrey.githubclient.common.data.entity.user.User
+import xyz.androidrey.githubclient.common.domain.model.DomainResult
 import xyz.androidrey.githubclient.common.ui.state.UiState
 import xyz.androidrey.githubclient.main.domain.repository.MainRepository
 import xyz.androidrey.githubclient.main.domain.usecase.users.GetCachedUsersUseCase
 import xyz.androidrey.githubclient.main.domain.usecase.users.GetUsersListWithCacheUseCase
 import xyz.androidrey.githubclient.main.domain.usecase.users.SearchCachedUsersUseCase
-import xyz.androidrey.githubclient.network.NetworkResult
 import javax.inject.Inject
 
 @HiltViewModel
@@ -58,12 +58,12 @@ class UsersViewModel @Inject constructor(
         _uiState.value = UiState.Loading
         viewModelScope.launch {
             when (val result = getUsersListWithCacheUseCase.invoke()) {
-                is NetworkResult.Success -> {
-                    _uiState.value = UiState.Success(result.result)
+                is DomainResult.Success -> {
+                    _uiState.value = UiState.Success(result.data)
                 }
 
-                is NetworkResult.Error -> {
-                    _uiState.value = UiState.Error(result.exception.message ?: "Unknown error")
+                is DomainResult.Error -> {
+                    _uiState.value = UiState.Error(result.message)
                 }
             }
         }

@@ -38,14 +38,14 @@ import xyz.androidrey.githubclient.theme.components.TheTextField
 fun UserList(
     users: List<User>,
     query: String,
-    viewModel: UsersViewModel,
+    onQueryChanged: (String) -> Unit,
     onSelect: (String) -> Unit
 ) {
     Column {
         // 🛠️ Static top search bar
         TheTextField(
             value = query,
-            onValueChanged = { viewModel.updateSearchQuery(it) },
+            onValueChanged = { onQueryChanged(it) },
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(horizontal = 16.dp, vertical = 12.dp),

@@ -16,7 +16,7 @@ import xyz.androidrey.githubclient.common.ui.state.UiState
 import xyz.androidrey.githubclient.main.domain.repository.MainRepository
 import xyz.androidrey.githubclient.main.domain.usecase.repository.GetRepositoryUseCase
 import xyz.androidrey.githubclient.main.domain.usecase.users.GetUserDetailsUseCase
-import xyz.androidrey.githubclient.network.NetworkResult
+import xyz.androidrey.githubclient.common.domain.model.DomainResult
 
 @HiltViewModel(assistedFactory = UserRepositoryViewModel.Factory::class)
 class UserRepositoryViewModel @AssistedInject constructor(
@@ -41,13 +41,15 @@ class UserRepositoryViewModel @AssistedInject constructor(
             val userResult = getUserDetailsUseCase(name)
             val repoResult = getRepositoryUseCase(name)
 
-            if (userResult is NetworkResult.Success && repoResult is NetworkResult.Success) {
-                val nonForkedRepos = repoResult.result.filter { !it.fork }
-                _uiState.value = UiState.Success(Pair(userResult.result, nonForkedRepos))
+            if (userResult is DomainResult.Success && repoResult is DomainResult.Success) {
+                val nonForkedRepos = repoResult.data.filter { !it.fork }
+                _uiState.value = UiState.Success(Pair(userResult.data, nonForkedRepos))
             } else {
-                val errorMsg = (userResult as? NetworkResult.Error)?.exception?.message
-                    ?: (repoResult as? NetworkResult.Error)?.exception?.message
-                    ?: "Unknown error"
+                val errorMsg = when {
+                    userResult is DomainResult.Error -> userResult.message
+                    repoResult is DomainResult.Error -> repoResult.message
+                    else -> "Unknown error"
+                }
                 _uiState.value = UiState.Error(errorMsg)
             }
         }
